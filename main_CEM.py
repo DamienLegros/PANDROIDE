@@ -64,7 +64,7 @@ def study_cem(params) -> None:
             policy = NormalSimple(random(simu.obs_size))
         pw = PolicyWrapper(policy, params.policy_type, simu.env_name, params.team_name, params.max_episode_steps)
         #plot_policy(policy, simu.env, True, simu.env_name, study, '_ante_', j, plot=False)
-        simu.trainCEM(pw, params, policy, policy_loss_file, params.study_name)
+        simu.trainCEM(pw, params, policy, policy_loss_file, params.study_name,params.fix_layers)
         #plot_policy(policy, simu.env, True, simu.env_name, study, '_post_', j, plot=False)
     chrono.stop()
 

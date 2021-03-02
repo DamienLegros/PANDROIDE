@@ -49,7 +49,7 @@ def get_args():
     parser.add_argument('--gradients', type=str, nargs='+', default=['sum', 'discount', 'normalize'], help='other: baseline, beta')
     parser.add_argument('--critic_estim_method', type=str, default="td", help='critic estimation method: mc, td or nstep')
     # learning parameters
-    
+
     parser.add_argument('--gamma', type=float, default=0.99, help='discount factor')
     parser.add_argument('--lr_actor', type=float, default=0.01, help='learning rate of the actor')
     parser.add_argument('--lr_critic', type=float, default=0.01, help='learning rate of the critic')
@@ -61,8 +61,9 @@ def get_args():
     parser.add_argument('--max_episode_steps', type=int, default=None, help='duration of an episode (step limit)')
     parser.add_argument('--sigma', type=float, default=1, help='noise')
     parser.add_argument('--elites_frac',type=float, default=0.2, help='proportion of the population to keep at each iter')
-    parser.add_argument('--bests_frac',type=float, default=0.25, help='proportion of the population to keep at each iter')
+    parser.add_argument('--bests_frac',type=float, default=1, help='proportion of the population to keep at each iter')
     parser.add_argument('--population',type=int, default=100, help='population')
+    parser.add_argument('--fix_layers', type=bool, default=False, help='fix all but the last layer of the neural network?')
 
     '''
     parser.add_argument('--save-interval', type=int, default=5, help='the interval that save the trajectory')

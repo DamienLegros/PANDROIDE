@@ -215,49 +215,6 @@ class Simu:
             total_reward_file.close()
             duration_file.close()
 
-
-    def trainCEMbis(self, pw, params, policy, policy_loss_file, study_name, beta=0) -> None:
-        sigma=params.sigma
-        n_elite = int(params.elites_frac * params.population)
-        best_weight = params.sigma*np.random.randn(policy.get_weights_dim())
-        path = os.getcwd() + "/data/save"
-        study = params.study_name
-        total_reward_file = open(path + "/total_reward_" + study + '_' + params.env_name + '.txt', 'w')
-        best_reward_file = open(path + "/best_reward_" + study + '_' + params.env_name + '.txt', 'w')
-
-        for cycle in range(params.nb_cycles):
-            weights_pop = [best_weight + (sigma*np.random.randn(policy.get_weights_dim())) for i in range(params.population)]
-            #batch = self.make_monte_carlo_batch(params.nb_trajs, params.render, policy)
-            #algo = AlgoCEM(study_name, policy, params.gamma, beta, params.nstep)
-            #algo.prepare_batch(batch)
-            #batch2 = batch.copy_batch()
-            mean_total_rewards=np.zeros(params.population)
-            for i in range(params.population):
-                average_tot_sum_on_traj=0
-                for j in range(params.nb_trajs):
-                    average_tot_sum_on_traj+=self.evaluate_episode_CEM(policy, params.deterministic_eval, best_weight)
-                mean_total_rewards[i]=average_tot_sum_on_traj/params.nb_trajs
-            elite_idxs = mean_total_rewards.argsort()[-n_elite:]
-
-
-            elite_weights = [weights_pop[i] for i in elite_idxs]
-            #print(elite_weights)
-            best_weight = np.array(elite_weights).mean(axis=0)
-
-            # policy evaluation part
-            total_reward = self.evaluate_episode_CEM(policy, params.deterministic_eval, best_weight)
-
-            total_reward_file.write(str(cycle) + ' ' + str(total_reward) + '\n')
-
-            # save best reward agent (no need for averaging if the policy is deterministic)
-            print("best :", self.best_reward, "| new :", total_reward, "| test :", self.best_reward < total_reward)
-            if self.best_reward < total_reward:
-                self.best_reward = total_reward
-                #best_reward_file.write(str(cycle) + ' ' + str(self.best_reward) + '\n')
-            pw.save(self.best_reward)
-        total_reward_file.close()
-        #best_reward_file.close()
-
     def train_on_one_episode(self, policy, deterministic, render=False):
         """
         Perform an episode using the policy parameter and return the corresponding samples into an episode structure
